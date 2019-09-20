@@ -1,0 +1,79 @@
+<!--
+ * @Autor: ErioY
+ * @Date: 2019-09-16 19:24:39
+ * @Email: 1973545559@qq.com
+ * @Github: https://github.com/ErioY
+ * @LastEditors: ErioY
+ * @LastEditTime: 2019-09-17 19:22:05
+ -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>用滚动条控制元素大小</title>
+     <style>
+     #div1 {
+         width: 25px;
+         height: 500px;
+         position: absolute;
+         left: 150px;
+         top: 100px;
+         background: #ccc;
+     }
+     #div2 {
+         width: 25px;
+         height: 80px;
+         position: absolute;
+         left: 0;
+         top: 0;
+         background: #000;
+     }
+     #div3 {
+         width: 300px;
+         /* height: 400px; */
+         height: 0;
+         position: absolute;
+         top: 100px;
+         left: 300px;
+         background: blue;
+     }
+     </style>
+ </head>
+ <body>
+     <!-- 模拟一个滚动条的拖拽，并在拖拽时改变一个div的高度 -->
+     <div id="div1">
+         <div id="div2"></div>
+     </div>
+     <div id="div3"></div>
+     <script>
+     var oDiv1 = document.querySelector("#div1");
+     var oDiv2 = document.querySelector("#div2");
+     var oDiv3 = document.querySelector("#div3");
+     oDiv2.onmousedown = function () {
+          // 鼠标按下时计算鼠标光标与黑色滚动条的垂直距离：
+         var disY = event.pageY - (oDiv1.offsetTop + oDiv2.offsetTop);
+         document.onmousemove = function () {
+             // 鼠标相对整个页面的位置减去差值
+             var newT = event.pageY- (disY + oDiv1.offsetTop);
+             newT = Math.max(newT, 0);
+             newT = Math.min(oDiv1.offsetHeight - oDiv2.offsetHeight, newT);
+             oDiv2.style.top = newT + "px";
+            //  不需要比例关系
+             if (parseFloat(oDiv2.style.top) > 400) {
+                oDiv3.style.height = 400 + "px";
+             } else {
+                oDiv3.style.height = oDiv2.style.top;
+             }
+         }
+         // 鼠标抬起释放元素，把事件指向null：
+         document.onmouseup = function () {
+             document.onmousemove = document.onmouseup = null;
+         }
+         // 阻止浏览器的默认行为
+         return false;
+     }
+     </script>
+ </body>
+ </html>
